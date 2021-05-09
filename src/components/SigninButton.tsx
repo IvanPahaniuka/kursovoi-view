@@ -1,11 +1,6 @@
-import {Button, Modal, Row, Col, Form, Input, message} from "antd";
+import {Button, Modal, Form, Input, message} from "antd";
 import * as icons from "@ant-design/icons";
 import React, {useState} from "react";
-
-const categoryButtonStyle = {
-    width: '100%',
-    textAlign: 'start' as const
-};
 
 export interface ISigninButtonProps {
     visible?: boolean;

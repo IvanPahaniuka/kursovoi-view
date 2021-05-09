@@ -1,7 +1,10 @@
-import React, {useState} from 'react';
-import {useHistory, Link} from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Link} from 'react-router-dom';
 import {Pagination, Carousel, Card, Space } from 'antd';
-import IStuff from "../types/stuff";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../redux/reducers/root";
+import {IStuffsState} from "../redux/reducers/stuffs";
+import * as stuffsActions from "../redux/actions/stuffs";
 
 const carouselItemStyle = {
     display: 'block',
@@ -10,13 +13,18 @@ const carouselItemStyle = {
     backgroundPosition: 'center'
 };
 
-export interface ICatalogProps {
-    stuffs: Array<IStuff>;
+export interface ICatalogPageProps {
 }
 
-export function Catalog({ stuffs }: ICatalogProps) {
+export function CatalogPage() {
+    const dispatch = useDispatch();
     const [currentPage, setCurrentPage] = useState(1);
+    const {stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const stuffCountPerPage = 7;
+
+    useEffect(() => {
+        if (!stuffs) dispatch(stuffsActions.getStuffs());
+    }, [stuffs]);
 
     return (
         <div>
@@ -47,7 +55,7 @@ export function Catalog({ stuffs }: ICatalogProps) {
 
                 <div>
                     <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }} size='large' align='center' wrap>
-                        {stuffs
+                        {(stuffs ?? [])
                             .slice((currentPage - 1) * stuffCountPerPage, currentPage * stuffCountPerPage)
                             .map((stuff, i) =>
                             <Card
@@ -63,7 +71,7 @@ export function Catalog({ stuffs }: ICatalogProps) {
             </div>
             <Pagination style={{textAlign: "center"}}
                         current={currentPage}
-                        total={stuffs.length}
+                        total={stuffs?.length ?? 0}
                         pageSize={stuffCountPerPage}
                         showSizeChanger={false}
                         onChange={(page) => setCurrentPage(page)}/>

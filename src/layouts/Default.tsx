@@ -1,35 +1,33 @@
-import React, {useState} from 'react';
-import {Layout, Col, Row, Divider, Button, Space, Input, Modal} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Layout, Col, Row, Divider, Button, Space, Input} from 'antd';
 import * as icons from '@ant-design/icons';
-import {Catalog} from './pages/Catalog';
-import {CategoriesButton} from "./components/CategoriesButton";
-import ICategory from "./types/category";
-import IStuff from "./types/stuff";
-import {SigninButton} from "./components/SigninButton";
+import {CategoriesButton} from "../components/CategoriesButton";
+import ICategory from "../types/category";
+import {SigninButton} from "../components/SigninButton";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../redux/reducers/root";
+import {ICategoriesState} from "../redux/reducers/categories";
+import * as categoriesActions from "../redux/actions/categories";
 
-let categories: Array<ICategory> = [
-    {name: 'Категория 1'},
-    {name: 'Категория 2'},
-    {name: 'Категория 3'},
-    {name: 'Категория 4'}
-];
-let stuffs: Array<IStuff> = [
-    { name: "Товар 1", cost: 1.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 2", cost: 2.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 3", cost: 3.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 4", cost: 4.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 1", cost: 1.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 2", cost: 2.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 3", cost: 3.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 4", cost: 4.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 1", cost: 1.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 2", cost: 2.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 3", cost: 3.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-    { name: "Товар 4", cost: 4.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg" },
-];
 
-function App() {
-    let [isLoggedIn, setIsLoggedIn] = useState(false);
+//todo stuff full info
+//todo basket full info
+//todo purchases full info
+//todo sell full info
+
+
+export interface IDefaultLayoutProps {
+    children?: any;
+}
+
+export function DefaultLayout({ children }: IDefaultLayoutProps) {
+    const dispatch = useDispatch();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories)
+
+    useEffect(() => {
+        if (!categories) dispatch(categoriesActions.getCategories());
+    }, [categories]);
 
     const onCategorySelect = (category: ICategory) => {
         console.log(category);
@@ -42,8 +40,8 @@ function App() {
     };
 
     const onSignup = (email: string, password: string) => {
-        return "Ошибка 0x000000 (время переустанавливать шиндовс)";
         console.log("signup " + JSON.stringify({email, password}));
+        return "Ошибка 0x000000 (время переустанавливать шиндовс)";
     };
 
     const onBasket = () => {
@@ -75,7 +73,7 @@ function App() {
                                       onSearch={onSearchClick} enterButton/>
                     </Col>
                     <Col>
-                        <Space >
+                        <Space>
                             <SigninButton visible={!isLoggedIn} onSignin={onSignin} onSignup={onSignup}/>
                             <Button size='large' icon={<icons.AppstoreOutlined/>}
                                     style={{display: isLoggedIn ? 'inline-block' : 'none'}}
@@ -92,7 +90,7 @@ function App() {
             </Layout.Header>
 
             <Layout.Content style={{padding: '2rem 4rem 0'}}>
-                <Catalog stuffs={stuffs}/>
+                {children}
             </Layout.Content>
 
             <Layout.Footer style={{textAlign: 'center', background: 'white'}}>
@@ -103,5 +101,3 @@ function App() {
         </Layout>
     );
 }
-
-export default App;

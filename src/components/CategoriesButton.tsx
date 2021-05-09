@@ -32,7 +32,7 @@ export function CategoriesButton({ categories = [], onCategorySelect = () => {} 
     return (
         <div>
             <Button type="primary" icon={<icons.UnorderedListOutlined/>} size='large' onClick={onCategoriesClick}>
-                Каталог
+                Категории
             </Button>
             <Modal title="Категории" visible={isModalVisible}
                    footer={null} onCancel={onCategoriesCancelClick}>
