@@ -1,9 +1,9 @@
 import * as actionsTypes from '../actionsTypes';
 import IStuff from '../../types/stuff';
 
-export interface IGetStuffsGenerator {
+export interface IGetStuffsDispatchType {
     type: typeof actionsTypes.GET_STUFFS;
     stuffs: Array<IStuff>;
 }
 
-export type StuffsDispatchTypes = IGetStuffsGenerator;
+export type StuffsDispatchTypes = IGetStuffsDispatchType;

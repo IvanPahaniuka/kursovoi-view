@@ -1,6 +1,6 @@
 import * as actionsTypes from "../actionsTypes";
 import ICategory from '../../types/category';
-import {CategoriesDispatchTypes} from "../generators/categories";
+import {CategoriesDispatchTypes} from "../dispatchTypes/categories";
 
 export interface ICategoriesState {
     categories?: Array<ICategory>;

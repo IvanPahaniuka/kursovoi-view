@@ -1,6 +1,6 @@
 import * as actionsTypes from "../actionsTypes";
 import IStuff from '../../types/stuff';
-import {StuffsDispatchTypes} from "../generators/stuffs";
+import {StuffsDispatchTypes} from "../dispatchTypes/stuffs";
 
 export interface IStuffsState {
     stuffs?: Array<IStuff>;

@@ -1,16 +1,34 @@
 import {Button, Modal, Form, Input, message} from "antd";
 import * as icons from "@ant-design/icons";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import {ISigninUser, ISignupUser} from "../types/user";
 
 export interface ISigninButtonProps {
     visible?: boolean;
-    onSignin?: (email: string, password: string) => string | void;
-    onSignup?: (email: string, password: string) => string | void;
+    onSignin?: (user: ISigninUser) => string | void;
+    onSignup?: (user: ISignupUser) => string | void;
+    signinResult?: "success" | "error";
+    signupResult?: "success" | "error";
+    error?: string;
 }
 
-export function SigninButton({visible = true, onSignin = () => {}, onSignup = () => {}}: ISigninButtonProps) {
-    const [isSigninModalVisible, setIsSigninModalVisible] = useState(false);
-    const [isSignupModalVisible, setIsSignupModalVisible] = useState(false);
+export function SigninButton({visible = true, onSignin = () => {}, onSignup = () => {},
+                                 signinResult, signupResult, error}: ISigninButtonProps) {
+    const [isSigninModalVisible, setIsSigninModalVisible] = useState<boolean>(false);
+    const [isSignupModalVisible, setIsSignupModalVisible] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (signinResult === "error" && error) message.error(error);
+        if (signinResult === "success") setIsSigninModalVisible(false);
+    }, [signinResult, error]);
+
+    useEffect(() => {
+        if (signupResult === "error" && error) message.error(error);
+        if (signupResult === "success") {
+            setIsSignupModalVisible(false);
+            setIsSigninModalVisible(true);
+        }
+    }, [signupResult, error]);
 
     const onClick = () => {
         setIsSigninModalVisible(true);
@@ -21,13 +39,7 @@ export function SigninButton({visible = true, onSignin = () => {}, onSignup = ()
     };
 
     const onSigninFinishHandler = ({email, password}: any) => {
-        let errorText = onSignin(email, password);
-        if (errorText) {
-            message.error(errorText);
-            return;
-        }
-
-        setIsSigninModalVisible(false);
+        onSignin({email, password});
     };
 
     const onSignupClick = () => {
@@ -45,14 +57,7 @@ export function SigninButton({visible = true, onSignin = () => {}, onSignup = ()
     };
 
     const onSignupFinishHandler = ({email, password, passwordConfirm}: any) => {
-        let errorText = onSignup(email, password);
-        if (errorText) {
-            message.error(errorText);
-            return;
-        }
-
-        setIsSignupModalVisible(false);
-        setIsSigninModalVisible(true);
+        onSignup({email, password});
     };
 
     return (

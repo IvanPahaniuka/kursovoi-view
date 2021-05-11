@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
-import {Pagination, Carousel, Card, Space } from 'antd';
+import React, {useEffect} from 'react';
+import {Link, useHistory} from 'react-router-dom';
+import {Carousel } from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../redux/reducers/root";
 import {IStuffsState} from "../redux/reducers/stuffs";
 import * as stuffsActions from "../redux/actions/stuffs";
+import {StuffsPanel} from "../components/StuffsPanel";
+import IStuff from "../types/stuff";
 
 const carouselItemStyle = {
     display: 'block',
@@ -16,20 +18,23 @@ const carouselItemStyle = {
 export interface ICatalogPageProps {
 }
 
-export function CatalogPage() {
+export function CatalogPage(props: ICatalogPageProps) {
+    const history = useHistory();
     const dispatch = useDispatch();
-    const [currentPage, setCurrentPage] = useState(1);
     const {stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
-    const stuffCountPerPage = 7;
 
     useEffect(() => {
         if (!stuffs) dispatch(stuffsActions.getStuffs());
-    }, [stuffs]);
+    }, [stuffs, dispatch]);
+
+    const onStuffClick = (stuff: IStuff) => {
+        history.push(`/stuffs?id=${stuff.id}`)
+    };
 
     return (
         <div>
-            <div style={{margin: '0 0 2rem'}}>
-                <Carousel style={{margin: '0 0 2rem', display: 'block' }} autoplay>
+            <div>
+                <Carousel style={{margin: '0 0 2rem', display: 'none' }} autoplay>
                     <div>
                         <Link to='/'
                              style={{
@@ -53,28 +58,9 @@ export function CatalogPage() {
                     </div>
                 </Carousel>
 
-                <div>
-                    <Space direction="horizontal" style={{ width: '100%', justifyContent: 'center' }} size='large' align='center' wrap>
-                        {(stuffs ?? [])
-                            .slice((currentPage - 1) * stuffCountPerPage, currentPage * stuffCountPerPage)
-                            .map((stuff, i) =>
-                            <Card
-                                key={i}
-                                hoverable
-                                style={{ width: 240 }}
-                                cover={<img alt="" src={stuff.image} />}>
-                                <Card.Meta title={`${stuff.cost}р`} description={stuff.name} />
-                            </Card>
-                        )}
-                    </Space>
-                </div>
+                <StuffsPanel stuffs={stuffs} onStuffClick={onStuffClick}/>
             </div>
-            <Pagination style={{textAlign: "center"}}
-                        current={currentPage}
-                        total={stuffs?.length ?? 0}
-                        pageSize={stuffCountPerPage}
-                        showSizeChanger={false}
-                        onChange={(page) => setCurrentPage(page)}/>
+
         </div>
     );
 };

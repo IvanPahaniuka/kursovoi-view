@@ -14,7 +14,7 @@ export interface ICategoriesButtonProps {
 }
 
 export function CategoriesButton({ categories = [], onCategorySelect = () => {} }: ICategoriesButtonProps) {
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     const onCategoriesClick = () => {
         setIsModalVisible(true);

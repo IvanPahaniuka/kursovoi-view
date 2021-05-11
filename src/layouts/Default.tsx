@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {Layout, Col, Row, Divider, Button, Space, Input} from 'antd';
 import * as icons from '@ant-design/icons';
 import {CategoriesButton} from "../components/CategoriesButton";
@@ -8,12 +8,15 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../redux/reducers/root";
 import {ICategoriesState} from "../redux/reducers/categories";
 import * as categoriesActions from "../redux/actions/categories";
+import * as authActions from "../redux/actions/auth";
+import {useHistory} from "react-router-dom";
+import {IAuthState} from "../redux/reducers/auth";
+import {ISigninUser, ISignupUser} from "../types/user";
 
 
 //todo stuff full info
 //todo basket full info
 //todo purchases full info
-//todo sell full info
 
 
 export interface IDefaultLayoutProps {
@@ -22,26 +25,36 @@ export interface IDefaultLayoutProps {
 
 export function DefaultLayout({ children }: IDefaultLayoutProps) {
     const dispatch = useDispatch();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories)
+    const history = useHistory();
+    const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
+    const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
 
     useEffect(() => {
         if (!categories) dispatch(categoriesActions.getCategories());
-    }, [categories]);
+    }, [categories, dispatch]);
+
+    useEffect(() => {
+        if (user === undefined) dispatch(authActions.loadFromStorage());
+    }, [user, dispatch]);
+
+    useEffect(() => {
+        if (signinResult || authError) dispatch(authActions.signinResultReset());
+    }, [signinResult, authError, dispatch]);
+
+    useEffect(() => {
+        if (signupResult || authError) dispatch(authActions.signupResultReset());
+    }, [signupResult, authError, dispatch]);
 
     const onCategorySelect = (category: ICategory) => {
         console.log(category);
     };
 
-    const onSignin = (email: string, password: string) => {
-        //return "Ошибка 0x000000 (время переустанавливать шиндовс)";
-        setIsLoggedIn(true);
-        console.log("signin " + JSON.stringify({email, password}));
+    const onSignin = (user: ISigninUser) => {
+        dispatch(authActions.signin(user));
     };
 
-    const onSignup = (email: string, password: string) => {
-        console.log("signup " + JSON.stringify({email, password}));
-        return "Ошибка 0x000000 (время переустанавливать шиндовс)";
+    const onSignup = (user: ISignupUser) => {
+        dispatch(authActions.signup(user));
     };
 
     const onBasket = () => {
@@ -53,12 +66,15 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
     };
 
     const onSignout = () => {
-        setIsLoggedIn(false);
-        console.log("on signout");
+        dispatch(authActions.signout());
     };
 
     const onSearchClick = (name: string) => {
         console.log("search: " + name);
+    };
+
+    const onMainClick = () => {
+        history.push('/');
     };
 
     return (
@@ -66,7 +82,10 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
             <Layout.Header style={{background: 'white', padding: '0.5rem 5rem'}}>
                 <Row gutter={[50, 0]} align="middle">
                     <Col>
-                        <CategoriesButton categories={categories} onCategorySelect={onCategorySelect}/>
+                        <Space>
+                            <Button onClick={onMainClick} size='large' type='primary' icon={<icons.HomeOutlined/>}>Главная</Button>
+                            <CategoriesButton categories={categories} onCategorySelect={onCategorySelect}/>
+                        </Space>
                     </Col>
                     <Col flex="auto">
                         <Input.Search style={{display: "block"}} placeholder="Название товара..." size="large"
@@ -74,15 +93,17 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
                     </Col>
                     <Col>
                         <Space>
-                            <SigninButton visible={!isLoggedIn} onSignin={onSignin} onSignup={onSignup}/>
+                            <SigninButton visible={!user}
+                                          signinResult={signinResult} signupResult={signupResult} error={authError}
+                                          onSignin={onSignin} onSignup={onSignup}/>
                             <Button size='large' icon={<icons.AppstoreOutlined/>}
-                                    style={{display: isLoggedIn ? 'inline-block' : 'none'}}
+                                    style={{display: user ? 'inline-block' : 'none'}}
                                     onClick={onBasket}>Корзина</Button>
                             <Button size='large' icon={<icons.DollarCircleOutlined/>}
-                                    style={{display: isLoggedIn ? 'inline-block' : 'none'}}
+                                    style={{display: user ? 'inline-block' : 'none'}}
                                     onClick={onOrders}>Заказы</Button>
                             <Button size='large' icon={<icons.LogoutOutlined/>} type='primary' danger
-                                    style={{display: isLoggedIn ? 'inline-block' : 'none'}}
+                                    style={{display: user ? 'inline-block' : 'none'}}
                                     onClick={onSignout}>Выход</Button>
                         </Space>
                     </Col>
