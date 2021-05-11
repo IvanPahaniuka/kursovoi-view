@@ -10,7 +10,7 @@ import {ICategoriesState} from "../redux/reducers/categories";
 import * as authActions from "../redux/actions/auth";
 import * as stuffsActions from "../redux/actions/stuffs";
 import {useHistory} from "react-router-dom";
-import {IAuthState} from "../redux/reducers/auth";
+import {IUserState} from "../redux/reducers/user";
 import {ISigninUser, ISignupUser} from "../types/user";
 import {IStuffsState} from "../redux/reducers/stuffs";
 import IFilter from "../types/filter";
@@ -30,7 +30,7 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
     const history = useHistory();
     const {filter} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
-    const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
+    const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IUserState>(state => state.auth);
 
     const onCategoryCheckChanged = (category: ICategory, value: boolean) => {
         let newCategoriesFilter = filter.categories ?? [];
@@ -66,7 +66,7 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
     };
 
     const onBasket = () => {
-        console.log("on basket");
+        history.push('/basket');
     };
 
     const onOrders = () => {

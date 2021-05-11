@@ -12,35 +12,31 @@ import IStuff from "./types/stuff";
 import * as categoriesActions from "./redux/actions/categories";
 import * as authActions from "./redux/actions/auth";
 import {ICategoriesState} from "./redux/reducers/categories";
-import {IAuthState} from "./redux/reducers/auth";
+import {IUserState} from "./redux/reducers/user";
+import {BasketPage} from "./pages/BasketPage";
 
 export function AppRoute() {
     const location = useLocation();
     const dispatch = useDispatch();
     const {stuffs, filter, filteredStuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
-    const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
+    const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IUserState>(state => state.auth);
 
     useEffect(() => {
         if (!stuffs) dispatch(stuffsActions.getStuffs());
     }, [stuffs, dispatch]);
-
     useEffect(() => {
         if (!filteredStuffs) dispatch(stuffsActions.filterStuffs(filter));
     }, [filteredStuffs, filter, dispatch]);
-
     useEffect(() => {
         if (!categories) dispatch(categoriesActions.getCategories());
     }, [categories, dispatch]);
-
     useEffect(() => {
         if (user === undefined) dispatch(authActions.loadFromStorage());
     }, [user, dispatch]);
-
     useEffect(() => {
         if (signinResult || authError) dispatch(authActions.signinResultReset());
     }, [signinResult, authError, dispatch]);
-
     useEffect(() => {
         if (signupResult || authError) dispatch(authActions.signupResultReset());
     }, [signupResult, authError, dispatch]);
@@ -55,10 +51,13 @@ export function AppRoute() {
     return (
         <DefaultLayout>
             <Switch>
-                <Route path={'/stuffs/'}>
+                <Route path='/stuffs'>
                     <StuffPage stuff={getStuffFromLocation()} />
                 </Route>
-                <Route path={'/'}>
+                <Route path='/basket'>
+                    <BasketPage />
+                </Route>
+                <Route path='/'>
                     <CatalogPage />
                 </Route>
             </Switch>

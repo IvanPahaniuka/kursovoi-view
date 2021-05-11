@@ -5,13 +5,17 @@ import {BrowserRouter} from "react-router-dom";
 import {Provider} from "react-redux";
 import store from "./redux/store";
 import {AppRoute} from "./AppRoute";
+import {ConfigProvider} from "antd";
+import ruRU from 'antd/lib/locale/ru_RU';
 //import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter>
-            <AppRoute/>
-        </BrowserRouter>
+        <ConfigProvider locale={ruRU}>
+            <BrowserRouter>
+                <AppRoute/>
+            </BrowserRouter>
+        </ConfigProvider>
     </Provider>,
     document.getElementById('root')
 );

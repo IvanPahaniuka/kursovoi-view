@@ -3,8 +3,9 @@ import IStuff from "../types/stuff";
 import {Divider, Row, Col, Card, Button, Tag, Space, message, Rate} from "antd";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../redux/reducers/root";
-import {IAuthState} from "../redux/reducers/auth";
+import {IUserState} from "../redux/reducers/user";
 import * as stuffActions from "../redux/actions/stuffs";
+import {setCountOfStuffInBasket} from "../redux/actions/basket";
 
 export interface IStuffPageProps {
     stuff: IStuff;
@@ -12,12 +13,17 @@ export interface IStuffPageProps {
 
 export function StuffPage({stuff}: IStuffPageProps) {
     const dispatch = useDispatch();
-    const {user} = useSelector<RootState, IAuthState>(state => state.auth);
+    const {user} = useSelector<RootState, IUserState>(state => state.auth);
 
     const onAddStuffToBasketClick = () => {
         //todo add to basket action and catch errors inside default layout if errors of auth
+        if (!user) {
+            message.error(`Товар "${stuff.name}" не добавлен в корзину, выполните вход`);
+            return;
+        }
+
+        dispatch(setCountOfStuffInBasket(user, stuff, 1));
         message.info(`Товар "${stuff.name}" добавлен в корзину`);
-        //message.error(`Товар \"${stuff.name}\" не добавлен в корзину`);
     };
 
     const getStuffRate = (stuff: IStuff) => {

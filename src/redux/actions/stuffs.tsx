@@ -46,7 +46,7 @@ export const rateStuff = (stuff: IStuff, rate: IRate) => async (dispatch: Dispat
 export const filterStuffs = (filter: IFilter) => async (dispatch: Dispatch<IFilterStuffsDispatchType>) => {
     let {search, categories} = filter;
 
-    let filteredStuffs: Array<IStuff> = stuffs;
+    let filteredStuffs: Array<IStuff> = [...stuffs];
     if (search) {
         filteredStuffs = filteredStuffs.filter(
             stuff => stuff.name.toLowerCase().includes(search!.toLowerCase()));
@@ -59,5 +59,5 @@ export const filterStuffs = (filter: IFilter) => async (dispatch: Dispatch<IFilt
                     categoryFilter => categoryFilter.id === categoryLocal.id)));
     }
 
-    dispatch({type: actionsTypes.FILTER_STUFFS, filter, filteredStuffs});
+    dispatch({type: actionsTypes.FILTER_STUFFS, filter: {...filter}, filteredStuffs});
 };

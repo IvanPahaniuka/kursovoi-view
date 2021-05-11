@@ -24,7 +24,8 @@ export const signin = (user: ISigninUser) => async (dispatch: Dispatch<AuthSigni
         return;
     }
 
-    let userLogged: ILoggedInUser = {id: userLocal.id, email: userLocal.email, accessToken: ""};
+    let userLogged: ILoggedInUser = {id: userLocal.id, email: userLocal.email,
+        basket: userLocal.basket, orders: userLocal.orders, accessToken: ""};
     localStorage.saveUser(userLogged);
     dispatch({type: actionsTypes.SIGNIN_RESULT_SUCCESS, user: userLogged});
 }
@@ -44,7 +45,7 @@ export const signup = (user: ISignupUser) => async (dispatch: Dispatch<AuthSignu
     }
 
     let id = Math.max(...users.map(userLocal => userLocal.id), -1) + 1;
-    let newUser: IUser = {id: id, email: user.email, password: user.password};
+    let newUser: IUser = {id: id, email: user.email, password: user.password, orders: [], basket: {stuffs: []}};
     users.push(newUser);
 
     dispatch({type: actionsTypes.SIGNUP_RESULT_SUCCESS});
