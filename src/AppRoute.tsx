@@ -17,13 +17,17 @@ import {IAuthState} from "./redux/reducers/auth";
 export function AppRoute() {
     const location = useLocation();
     const dispatch = useDispatch();
-    const {stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
+    const {stuffs, search, searchedStuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
     const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
 
     useEffect(() => {
         if (!stuffs) dispatch(stuffsActions.getStuffs());
     }, [stuffs, dispatch]);
+
+    useEffect(() => {
+        if (!searchedStuffs) dispatch(stuffsActions.searchStuff(search));
+    }, [searchedStuffs, search, dispatch]);
 
     useEffect(() => {
         if (!categories) dispatch(categoriesActions.getCategories());

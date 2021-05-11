@@ -17,9 +17,9 @@ const carouselItemStyle = {
 export interface ICatalogPageProps {
 }
 
-export function CatalogPage(props: ICatalogPageProps) {
+export function CatalogPage(_: ICatalogPageProps) {
     const history = useHistory();
-    const {stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
+    const {searchedStuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
 
     const onStuffClick = (stuff: IStuff) => {
         history.push(`/stuffs?id=${stuff.id}`)
@@ -52,7 +52,7 @@ export function CatalogPage(props: ICatalogPageProps) {
                     </div>
                 </Carousel>
 
-                <StuffsPanel stuffs={stuffs} onStuffClick={onStuffClick}/>
+                <StuffsPanel stuffs={searchedStuffs} onStuffClick={onStuffClick}/>
             </div>
 
         </div>

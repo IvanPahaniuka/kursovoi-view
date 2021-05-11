@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import * as actionsTypes from '../actionsTypes';
-import {IGetStuffsDispatchType, IRateStuffDispatchType} from "../dispatchTypes/stuffs";
+import {IGetStuffsDispatchType, IRateStuffDispatchType, ISearchStuffDispatchType} from "../dispatchTypes/stuffs";
 import IStuff from "../../types/stuff";
 import IRate from "../../types/rate";
 
@@ -36,5 +36,9 @@ export const rateStuff = (stuff: IStuff, rate: IRate) => async (dispatch: Dispat
         stuffLocal.rates.push(rate);
     }
 
-    dispatch({type: actionsTypes.RATE_STUFF, stuff: stuff, rate: rate});
+    dispatch({type: actionsTypes.RATE_STUFF});
 }
+export const searchStuff = (search: string) => async (dispatch: Dispatch<ISearchStuffDispatchType>) => {
+    let searchedStuffs = stuffs.filter(stuff => stuff.name.toLowerCase().includes(search.toLowerCase()));
+    dispatch({type: actionsTypes.SEARCH_STUFFS, search, searchedStuffs});
+};

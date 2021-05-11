@@ -8,9 +8,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../redux/reducers/root";
 import {ICategoriesState} from "../redux/reducers/categories";
 import * as authActions from "../redux/actions/auth";
+import * as stuffsActions from "../redux/actions/stuffs";
 import {useHistory} from "react-router-dom";
 import {IAuthState} from "../redux/reducers/auth";
 import {ISigninUser, ISignupUser} from "../types/user";
+import {IStuffsState} from "../redux/reducers/stuffs";
 
 
 //todo stuff full info
@@ -25,6 +27,7 @@ export interface IDefaultLayoutProps {
 export function DefaultLayout({ children }: IDefaultLayoutProps) {
     const dispatch = useDispatch();
     const history = useHistory();
+    const {search} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
     const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
 
@@ -52,8 +55,8 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
         dispatch(authActions.signout());
     };
 
-    const onSearchClick = (name: string) => {
-        console.log("search: " + name);
+    const onSearchClick = (value: string) => {
+        dispatch(stuffsActions.searchStuff(value))
     };
 
     const onMainClick = () => {
@@ -71,7 +74,9 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
                         </Space>
                     </Col>
                     <Col flex="auto">
-                        <Input.Search style={{display: "block"}} placeholder="Название товара..." size="large"
+                        <Input.Search style={{display: "block"}}
+                                      defaultValue={search}
+                                      placeholder="Название товара..." size="large"
                                       onSearch={onSearchClick} enterButton/>
                     </Col>
                     <Col>
