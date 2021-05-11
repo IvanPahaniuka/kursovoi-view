@@ -1,8 +1,10 @@
-import IBasket from "./basketStuff";
+import IBasket from "./basket";
+import {OrderStates} from "./orderStates";
 
 export default interface IOrder {
+    id: number;
     basket: IBasket;
-    state: "ordered" | "paid" | "taken" | "revoked";
+    state: OrderStates;
     createTime: Date;
-    takeTime: Date;
+    takeTime?: Date;
 }

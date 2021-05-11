@@ -12,5 +12,5 @@ let categories: Array<ICategory> = [
 
 export const getCategories = () => async (dispatch: Dispatch<CategoriesDispatchTypes>) => {
     //todo get categories by api
-    dispatch({type: actionsTypes.GET_CATEGORIES, categories: categories});
+    dispatch({type: actionsTypes.UPDATE_CATEGORIES, categories: categories});
 }

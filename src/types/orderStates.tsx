@@ -1,0 +1,1 @@
+export type OrderStates = "ordered" | "ready" | "taken" | "revoked";

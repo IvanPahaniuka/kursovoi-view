@@ -70,7 +70,7 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
     };
 
     const onOrders = () => {
-        console.log("on orders");
+        history.push('/orders');
     };
 
     const onSignout = () => {

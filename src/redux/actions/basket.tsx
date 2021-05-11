@@ -29,8 +29,15 @@ export const setCountOfStuffInBasket = (user: ILoggedInUser, stuff: IStuff, coun
     let newUser = {...user, basket: newBasket};
     dispatch({type: actionsTypes.BASKET_UPDATE, user: newUser});
 }
-
 export const clearBasket = (user: ILoggedInUser) => async (dispatch: Dispatch<IBasketUpdateDispatchType>) => {
     let newUser: ILoggedInUser = {...user, basket: {stuffs: []}};
     dispatch({type: actionsTypes.BASKET_UPDATE, user: newUser});
-};
+}
+export const orderBasket = (user: ILoggedInUser) => async (dispatch: Dispatch<IBasketUpdateDispatchType>) => {
+    let basket = user.basket;
+    let newOrders = user.orders.slice();
+    let id = Math.max(...newOrders.map(order => order.id), -1) + 1;
+    newOrders.push({id, basket, state: 'ordered', createTime: new Date(), takeTime: undefined});
+    let newUser: ILoggedInUser = {...user, orders: newOrders, basket: {stuffs: []}};
+    dispatch({type: actionsTypes.BASKET_UPDATE, user: newUser});
+}

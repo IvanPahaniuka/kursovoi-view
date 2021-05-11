@@ -26,7 +26,7 @@ let stuffs: Array<IStuff> = [
 
 export const getStuffs = () => async (dispatch: Dispatch<IGetStuffsDispatchType>) => {
     //todo get stuffs by api
-    dispatch({type: actionsTypes.GET_STUFFS, stuffs: stuffs});
+    dispatch({type: actionsTypes.UPDATE_STUFFS, stuffs: stuffs});
 }
 export const rateStuff = (stuff: IStuff, rate: IRate) => async (dispatch: Dispatch<IRateStuffDispatchType>) => {
     //todo rate stuff by api

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Table, InputNumber, Space, Button} from 'antd';
+import {Table, InputNumber, Space, Button, message} from 'antd';
 import {useDispatch, useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import {RootState} from "../redux/reducers/root";
@@ -16,7 +16,8 @@ export function BasketPage(_: IBasketPageProps) {
     const {user} = useSelector<RootState, IUserState>(state => state.auth);
     const basket: IBasket = user?.basket ?? {stuffs: []};
     const mappedBasketStuffs = basket.stuffs.map(
-        stuff => ({...stuff.baseStuff, count: stuff.count, basketStuff: stuff}));
+        stuff => ({...stuff.baseStuff, cost: stuff.baseStuff.cost.toFixed(2),
+            count: stuff.count, basketStuff: stuff}));
 
     const onCountInputBlur = (stuff: IStuff) => (e: any) => {
         let value = +e.target.value;
@@ -25,7 +26,10 @@ export function BasketPage(_: IBasketPageProps) {
         }
     }
     const onOrderClick = () => {
-
+        if (user) {
+            dispatch(basketActions.orderBasket(user));
+            message.info("Заказ успешно получен");
+        }
     }
     const onClearClick = () => {
         if (user) {
@@ -57,7 +61,6 @@ export function BasketPage(_: IBasketPageProps) {
                 return (
                     <InputNumber size='large' min={0} max={10000}
                                  defaultValue={mappedStuff.count}
-                                 
                                  onBlur={onCountInputBlur(mappedStuff.basketStuff.baseStuff)}/>
                 );
             }
@@ -70,8 +73,10 @@ export function BasketPage(_: IBasketPageProps) {
                    style={{margin: '0 0 1rem'}}
                    rowKey={(mappedStuff: any) => mappedStuff.id}/>
             <Space style={{justifyContent: 'flex-end', width: '100%'}}>
-                <Button type='default' size='large' disabled={!user} onClick={onClearClick}>Очистить корзину</Button>
-                <Button type='primary' size='large' disabled={!user} onClick={onOrderClick}>Оформить заказ</Button>
+                <Button type='default' size='large' disabled={!user || mappedBasketStuffs.length === 0}
+                        onClick={onClearClick}>Очистить корзину</Button>
+                <Button type='primary' size='large' disabled={!user || mappedBasketStuffs.length === 0}
+                        onClick={onOrderClick}>Оформить заказ</Button>
             </Space>
         </div>
     );

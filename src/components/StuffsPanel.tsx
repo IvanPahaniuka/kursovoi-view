@@ -1,7 +1,6 @@
-import {Space, Card, Pagination} from "antd";
+import {Space, Card, Pagination, Empty} from "antd";
 import React, {useState} from "react";
 import IStuff from "../types/stuff";
-import * as icons from "@ant-design/icons";
 
 
 export interface IStuffsPanelProps {
@@ -39,10 +38,7 @@ export function StuffsPanel({
                         )}
                 </Space>
             :
-                <div style={{textAlign: "center", color: '#ddd', margin: '1rem 0 0'}}>
-                    <icons.FrownOutlined style={{fontSize: '5rem', margin: '0 0 0.5rem 0'}}/>
-                    <h3 style={{color: 'inherit'}}>Список товаров пуст</h3>
-                </div>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
             }
 
             <Pagination style={{textAlign: "center"}}

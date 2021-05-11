@@ -1,8 +1,8 @@
-export const GET_STUFFS = 'GET_STUFFS';
+export const UPDATE_STUFFS = 'UPDATE_STUFFS';
 export const RATE_STUFF = 'RATE_STUFF';
 export const FILTER_STUFFS = 'FILTER_STUFFS';
 
-export const GET_CATEGORIES = 'GET_CATEGORIES';
+export const UPDATE_CATEGORIES = 'UPDATE_CATEGORIES';
 
 export const BASKET_UPDATE = 'BASKET_UPDATE';
 

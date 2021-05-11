@@ -5,7 +5,7 @@ import ICategory from "../../types/category";
 import IFilter from "../../types/filter";
 
 export interface IGetStuffsDispatchType {
-    type: typeof actionsTypes.GET_STUFFS;
+    type: typeof actionsTypes.UPDATE_STUFFS;
     stuffs: Array<IStuff>;
 }
 

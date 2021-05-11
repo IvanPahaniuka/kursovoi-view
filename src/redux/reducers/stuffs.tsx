@@ -17,7 +17,7 @@ const defaultState: IStuffsState = {
 
 export const stuffsReducer = (state: IStuffsState = defaultState, action: StuffsDispatchTypes) : IStuffsState => {
     switch (action.type) {
-        case actionsTypes.GET_STUFFS:
+        case actionsTypes.UPDATE_STUFFS:
             return {...state, stuffs: action.stuffs, filteredStuffs: undefined};
 
         case actionsTypes.RATE_STUFF:

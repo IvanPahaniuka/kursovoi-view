@@ -12,7 +12,7 @@ const defaultState: ICategoriesState = {
 
 export const categoriesReducer = (state: ICategoriesState = defaultState, action: CategoriesDispatchTypes) : ICategoriesState => {
     switch (action.type) {
-        case actionsTypes.GET_CATEGORIES:
+        case actionsTypes.UPDATE_CATEGORIES:
             return {...state, categories: action.categories};
 
         default:

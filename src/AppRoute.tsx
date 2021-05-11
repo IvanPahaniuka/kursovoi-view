@@ -14,6 +14,7 @@ import * as authActions from "./redux/actions/auth";
 import {ICategoriesState} from "./redux/reducers/categories";
 import {IUserState} from "./redux/reducers/user";
 import {BasketPage} from "./pages/BasketPage";
+import {OrdersPage} from "./pages/OrdersPage";
 
 export function AppRoute() {
     const location = useLocation();
@@ -56,6 +57,9 @@ export function AppRoute() {
                 </Route>
                 <Route path='/basket'>
                     <BasketPage />
+                </Route>
+                <Route path='/orders'>
+                    <OrdersPage />
                 </Route>
                 <Route path='/'>
                     <CatalogPage />
