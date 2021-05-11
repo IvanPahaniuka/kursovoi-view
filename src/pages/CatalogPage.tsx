@@ -1,10 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import {Carousel } from 'antd';
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {RootState} from "../redux/reducers/root";
 import {IStuffsState} from "../redux/reducers/stuffs";
-import * as stuffsActions from "../redux/actions/stuffs";
 import {StuffsPanel} from "../components/StuffsPanel";
 import IStuff from "../types/stuff";
 
@@ -20,12 +19,7 @@ export interface ICatalogPageProps {
 
 export function CatalogPage(props: ICatalogPageProps) {
     const history = useHistory();
-    const dispatch = useDispatch();
     const {stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
-
-    useEffect(() => {
-        if (!stuffs) dispatch(stuffsActions.getStuffs());
-    }, [stuffs, dispatch]);
 
     const onStuffClick = (stuff: IStuff) => {
         history.push(`/stuffs?id=${stuff.id}`)

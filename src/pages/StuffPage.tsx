@@ -1,14 +1,18 @@
 import React from 'react';
 import IStuff from "../types/stuff";
 import {Divider, Row, Col, Card, Button, Tag, Space, message, Rate} from "antd";
-import {ILoggedInUser} from "../types/user";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../redux/reducers/root";
+import {IAuthState} from "../redux/reducers/auth";
+import * as stuffActions from "../redux/actions/stuffs";
 
 export interface IStuffPageProps {
     stuff: IStuff;
-    currentUser?: ILoggedInUser;
 }
 
-export function StuffPage({stuff, currentUser}: IStuffPageProps) {
+export function StuffPage({stuff}: IStuffPageProps) {
+    const dispatch = useDispatch();
+    const {user} = useSelector<RootState, IAuthState>(state => state.auth);
 
     const onAddStuffToBasketClick = () => {
         //todo add to basket action and catch errors inside default layout if errors of auth
@@ -17,8 +21,8 @@ export function StuffPage({stuff, currentUser}: IStuffPageProps) {
     };
 
     const getStuffRate = (stuff: IStuff) => {
-        if (currentUser) {
-            const rate = stuff.rates.find(rate => rate.user.id === currentUser.id);
+        if (user) {
+            const rate = stuff.rates.find(rate => rate.user.id === user.id);
             if (rate) {
                 return rate.value;
             }
@@ -28,15 +32,16 @@ export function StuffPage({stuff, currentUser}: IStuffPageProps) {
             stuff.rates.map(r => r.value).reduce((s, v) => s + v) / stuff.rates.length : 0;
     };
 
-    const onChangeHandler = (value: number) => {
-        console.log('On change ' + value);
+    const onChangeRateHandler = (value: number) => {
+        if (user)
+            dispatch(stuffActions.rateStuff(stuff, {user, value}));
     };
 
     return (
         <div>
             <h1>{stuff.name}</h1>
             <span>
-                <Rate allowHalf disabled={!currentUser} value={getStuffRate(stuff)} onChange={onChangeHandler}/>
+                <Rate allowHalf disabled={!user} value={getStuffRate(stuff)} onChange={onChangeRateHandler} allowClear={false}/>
                 <span className="ant-rate-text">{stuff.rates.length}</span>
             </span>
             <Divider/>

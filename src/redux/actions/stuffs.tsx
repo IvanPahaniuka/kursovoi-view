@@ -1,7 +1,8 @@
 import {Dispatch} from "redux";
 import * as actionsTypes from '../actionsTypes';
-import {StuffsDispatchTypes} from "../dispatchTypes/stuffs";
+import {IGetStuffsDispatchType, IRateStuffDispatchType} from "../dispatchTypes/stuffs";
 import IStuff from "../../types/stuff";
+import IRate from "../../types/rate";
 
 let stuffs: Array<IStuff> = [
     { id: 0, rates: [], name: "Товар 1", description: '', cost: 1.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg", categories: [{id: 0, name: 'Категория 1'}] },
@@ -18,7 +19,22 @@ let stuffs: Array<IStuff> = [
     { id: 11, rates: [], name: "Товар 4", description: '', cost: 4.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg", categories: [{id: 0, name: 'Категория 1'}] },
 ];
 
-export const getStuffs = () => async (dispatch: Dispatch<StuffsDispatchTypes>) => {
+export const getStuffs = () => async (dispatch: Dispatch<IGetStuffsDispatchType>) => {
     //todo get stuffs by api
     dispatch({type: actionsTypes.GET_STUFFS, stuffs: stuffs});
+}
+export const rateStuff = (stuff: IStuff, rate: IRate) => async (dispatch: Dispatch<IRateStuffDispatchType>) => {
+    //todo rate stuff by api
+    let stuffLocal = stuffs.find(stuffLocal => stuffLocal.id === stuff.id);
+    if (!stuffLocal) return;
+
+    let rateLocal = stuffLocal.rates.find(rateLocal => rateLocal.user.id === rate.user.id);
+    if (rateLocal) {
+        rateLocal.value = rate.value;
+    }
+    else {
+        stuffLocal.rates.push(rate);
+    }
+
+    dispatch({type: actionsTypes.RATE_STUFF, stuff: stuff, rate: rate});
 }

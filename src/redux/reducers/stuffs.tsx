@@ -15,6 +15,9 @@ export const stuffsReducer = (state: IStuffsState = defaultState, action: Stuffs
         case actionsTypes.GET_STUFFS:
             return {...state, stuffs: action.stuffs};
 
+        case actionsTypes.RATE_STUFF:
+            return {...state};
+
         default:
             return state;
     }

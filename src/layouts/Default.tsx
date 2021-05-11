@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {Layout, Col, Row, Divider, Button, Space, Input} from 'antd';
 import * as icons from '@ant-design/icons';
 import {CategoriesButton} from "../components/CategoriesButton";
@@ -7,7 +7,6 @@ import {SigninButton} from "../components/SigninButton";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../redux/reducers/root";
 import {ICategoriesState} from "../redux/reducers/categories";
-import * as categoriesActions from "../redux/actions/categories";
 import * as authActions from "../redux/actions/auth";
 import {useHistory} from "react-router-dom";
 import {IAuthState} from "../redux/reducers/auth";
@@ -28,22 +27,6 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
     const history = useHistory();
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
     const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
-
-    useEffect(() => {
-        if (!categories) dispatch(categoriesActions.getCategories());
-    }, [categories, dispatch]);
-
-    useEffect(() => {
-        if (user === undefined) dispatch(authActions.loadFromStorage());
-    }, [user, dispatch]);
-
-    useEffect(() => {
-        if (signinResult || authError) dispatch(authActions.signinResultReset());
-    }, [signinResult, authError, dispatch]);
-
-    useEffect(() => {
-        if (signupResult || authError) dispatch(authActions.signupResultReset());
-    }, [signupResult, authError, dispatch]);
 
     const onCategorySelect = (category: ICategory) => {
         console.log(category);
