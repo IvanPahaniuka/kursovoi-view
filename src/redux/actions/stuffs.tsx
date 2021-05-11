@@ -1,8 +1,13 @@
 import {Dispatch} from "redux";
 import * as actionsTypes from '../actionsTypes';
-import {IGetStuffsDispatchType, IRateStuffDispatchType, ISearchStuffDispatchType} from "../dispatchTypes/stuffs";
+import {
+    IFilterStuffsDispatchType,
+    IGetStuffsDispatchType,
+    IRateStuffDispatchType
+} from "../dispatchTypes/stuffs";
 import IStuff from "../../types/stuff";
 import IRate from "../../types/rate";
+import IFilter from "../../types/filter";
 
 let stuffs: Array<IStuff> = [
     { id: 0, rates: [], name: "Товар 1", description: '', cost: 1.99, image: "https://img.kinomax24.com/series/16_S1E5.jpg", categories: [{id: 0, name: 'Категория 1'}] },
@@ -38,7 +43,21 @@ export const rateStuff = (stuff: IStuff, rate: IRate) => async (dispatch: Dispat
 
     dispatch({type: actionsTypes.RATE_STUFF});
 }
-export const searchStuff = (search: string) => async (dispatch: Dispatch<ISearchStuffDispatchType>) => {
-    let searchedStuffs = stuffs.filter(stuff => stuff.name.toLowerCase().includes(search.toLowerCase()));
-    dispatch({type: actionsTypes.SEARCH_STUFFS, search, searchedStuffs});
+export const filterStuffs = (filter: IFilter) => async (dispatch: Dispatch<IFilterStuffsDispatchType>) => {
+    let {search, categories} = filter;
+
+    let filteredStuffs: Array<IStuff> = stuffs;
+    if (search) {
+        filteredStuffs = filteredStuffs.filter(
+            stuff => stuff.name.toLowerCase().includes(search!.toLowerCase()));
+    }
+
+    if (categories && categories.length > 0) {
+        filteredStuffs = filteredStuffs.filter(
+            stuff => stuff.categories.find(
+                categoryLocal => categories!.find(
+                    categoryFilter => categoryFilter.id === categoryLocal.id)));
+    }
+
+    dispatch({type: actionsTypes.FILTER_STUFFS, filter, filteredStuffs});
 };

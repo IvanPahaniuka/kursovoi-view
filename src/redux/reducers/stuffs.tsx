@@ -1,29 +1,30 @@
 import * as actionsTypes from "../actionsTypes";
 import IStuff from '../../types/stuff';
 import {StuffsDispatchTypes} from "../dispatchTypes/stuffs";
+import IFilter from "../../types/filter";
 
 export interface IStuffsState {
     stuffs?: Array<IStuff>;
-    search: string;
-    searchedStuffs?: Array<IStuff>;
+    filter: IFilter;
+    filteredStuffs?: Array<IStuff>;
 }
 
 const defaultState: IStuffsState = {
     stuffs: undefined,
-    search: "",
-    searchedStuffs: undefined
+    filter: {},
+    filteredStuffs: undefined
 }
 
 export const stuffsReducer = (state: IStuffsState = defaultState, action: StuffsDispatchTypes) : IStuffsState => {
     switch (action.type) {
         case actionsTypes.GET_STUFFS:
-            return {...state, stuffs: action.stuffs, searchedStuffs: undefined};
+            return {...state, stuffs: action.stuffs, filteredStuffs: undefined};
 
         case actionsTypes.RATE_STUFF:
             return {...state};
 
-        case actionsTypes.SEARCH_STUFFS:
-            return {...state, search: action.search, searchedStuffs: action.searchedStuffs}
+        case actionsTypes.FILTER_STUFFS:
+            return {...state, filter: action.filter, filteredStuffs: action.filteredStuffs}
 
         default:
             return state;

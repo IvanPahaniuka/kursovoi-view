@@ -19,7 +19,7 @@ export interface ICatalogPageProps {
 
 export function CatalogPage(_: ICatalogPageProps) {
     const history = useHistory();
-    const {searchedStuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
+    const {filteredStuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
 
     const onStuffClick = (stuff: IStuff) => {
         history.push(`/stuffs?id=${stuff.id}`)
@@ -52,7 +52,7 @@ export function CatalogPage(_: ICatalogPageProps) {
                     </div>
                 </Carousel>
 
-                <StuffsPanel stuffs={searchedStuffs} onStuffClick={onStuffClick}/>
+                <StuffsPanel stuffs={filteredStuffs} onStuffClick={onStuffClick}/>
             </div>
 
         </div>

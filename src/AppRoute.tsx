@@ -17,7 +17,7 @@ import {IAuthState} from "./redux/reducers/auth";
 export function AppRoute() {
     const location = useLocation();
     const dispatch = useDispatch();
-    const {stuffs, search, searchedStuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
+    const {stuffs, filter, filteredStuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
     const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
 
@@ -26,8 +26,8 @@ export function AppRoute() {
     }, [stuffs, dispatch]);
 
     useEffect(() => {
-        if (!searchedStuffs) dispatch(stuffsActions.searchStuff(search));
-    }, [searchedStuffs, search, dispatch]);
+        if (!filteredStuffs) dispatch(stuffsActions.filterStuffs(filter));
+    }, [filteredStuffs, filter, dispatch]);
 
     useEffect(() => {
         if (!categories) dispatch(categoriesActions.getCategories());

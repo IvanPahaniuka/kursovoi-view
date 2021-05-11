@@ -13,6 +13,7 @@ import {useHistory} from "react-router-dom";
 import {IAuthState} from "../redux/reducers/auth";
 import {ISigninUser, ISignupUser} from "../types/user";
 import {IStuffsState} from "../redux/reducers/stuffs";
+import IFilter from "../types/filter";
 
 
 //todo stuff full info
@@ -27,12 +28,33 @@ export interface IDefaultLayoutProps {
 export function DefaultLayout({ children }: IDefaultLayoutProps) {
     const dispatch = useDispatch();
     const history = useHistory();
-    const {search} = useSelector<RootState, IStuffsState>(state => state.stuffs);
+    const {filter} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
     const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IAuthState>(state => state.auth);
 
-    const onCategorySelect = (category: ICategory) => {
-        console.log(category);
+    const onCategoryCheckChanged = (category: ICategory, value: boolean) => {
+        let newCategoriesFilter = filter.categories ?? [];
+        let index = newCategoriesFilter.findIndex(
+            categoryFilter => categoryFilter.id === category.id);
+
+        if ((index >= 0) !== value) {
+            if (value) {
+                newCategoriesFilter.push(category);
+            }
+            else {
+                newCategoriesFilter.splice(index, 1);
+            }
+
+            let newFilter: IFilter = {...filter, categories: newCategoriesFilter }
+            dispatch(stuffsActions.filterStuffs(newFilter));
+            history.push('/');
+        }
+    };
+
+    const onSearchClick = (value: string) => {
+        let newFilter: IFilter = {...filter, search: value }
+        dispatch(stuffsActions.filterStuffs(newFilter));
+        history.push('/');
     };
 
     const onSignin = (user: ISigninUser) => {
@@ -55,10 +77,6 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
         dispatch(authActions.signout());
     };
 
-    const onSearchClick = (value: string) => {
-        dispatch(stuffsActions.searchStuff(value))
-    };
-
     const onMainClick = () => {
         history.push('/');
     };
@@ -70,12 +88,12 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
                     <Col>
                         <Space>
                             <Button onClick={onMainClick} size='large' type='primary' icon={<icons.HomeOutlined/>}>Главная</Button>
-                            <CategoriesButton categories={categories} onCategorySelect={onCategorySelect}/>
+                            <CategoriesButton categories={categories} checkedCategories={filter.categories} onCategoryCheckChanged={onCategoryCheckChanged}/>
                         </Space>
                     </Col>
                     <Col flex="auto">
                         <Input.Search style={{display: "block"}}
-                                      defaultValue={search}
+                                      defaultValue={filter?.search ?? ""}
                                       placeholder="Название товара..." size="large"
                                       onSearch={onSearchClick} enterButton/>
                     </Col>
