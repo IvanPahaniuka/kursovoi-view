@@ -12,6 +12,7 @@ import IStuff from "./types/stuff";
 import * as categoriesActions from "./redux/actions/categories";
 import * as authActions from "./redux/actions/auth";
 import * as ordersActions from "./redux/actions/orders";
+import * as basketActions from "./redux/actions/basket";
 import {ICategoriesState} from "./redux/reducers/categories";
 import {IUserState} from "./redux/reducers/user";
 import {BasketPage} from "./pages/BasketPage";
@@ -36,6 +37,7 @@ export function AppRoute() {
     useEffect(() => {
         if (user === undefined) dispatch(authActions.loadFromStorage());
         if (user && user.orders === undefined) dispatch(ordersActions.getOrders(user));
+        if (user && user.basket === undefined) dispatch(basketActions.getBasket(user));
     }, [user, dispatch]);
     useEffect(() => {
         if (signinResult || authError) dispatch(authActions.signinResultReset());

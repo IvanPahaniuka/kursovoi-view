@@ -55,7 +55,7 @@ const mapApiProductToStuff = (apiProduct: any): IStuff => {
 }
 const mapApiProductItemToBasketStuff = (apiStuff: any): IBasketStuff => {
     return {
-        stuffId: apiStuff.productid,
+        stuffId: apiStuff.productId,
         count: apiStuff.count
     };
 }
@@ -100,12 +100,18 @@ export const signin = async (user: ISigninUser) => {
     const response = await axios.post(SIGNIN, user, {
         baseURL: url
     });
-    console.log(JSON.stringify(response.data));
 
     return mapApiSigninResponseToLoggedInUser(response.data);
     //return new VerifiedUser(response.data.name, response.data.accessToken);
 }
+export const getBasket = async (user: ILoggedInUser): Promise<IBasket> => {
+    const response = await axios.get(`${ACCOUNT}/${user.id}`, {
+        headers: enrichWithAccessToken(),
+        baseURL: url
+    });
 
+    return {stuffs: response.data.cart.map((apiProduct: any) => mapApiProductItemToBasketStuff(apiProduct))};
+}
 export const getCategories = async (): Promise<Array<ICategory>> => {
     const response = await axios.get(CATEGORY, {
         baseURL: url
@@ -141,7 +147,7 @@ export const rateStuff = async (stuff: IStuff, rate: IRate) => {
 
 export const updateBasket = async (user: ILoggedInUser) => {
     await axios.put(`${ACCOUNT}/${user.id}/cart`,
-        {Cart: user.basket.stuffs.map(stuff => mapBasketStuffToApiProductItem(stuff))}, {
+        {Cart: user.basket?.stuffs.map(stuff => mapBasketStuffToApiProductItem(stuff)) ?? []}, {
             headers: enrichWithAccessToken(),
             baseURL: url
         });
@@ -149,7 +155,7 @@ export const updateBasket = async (user: ILoggedInUser) => {
 
 export const orderBasket = async (user: ILoggedInUser) => {
     await axios.post(ORDERS,
-        {AccountId: user.id, Products: user.basket.stuffs.map(stuff => mapBasketStuffToApiProductItem(stuff)), Status: "ordered" as OrderStates}, {
+        {AccountId: user.id, Products: user.basket?.stuffs.map(stuff => mapBasketStuffToApiProductItem(stuff)), Status: "ordered" as OrderStates} ?? [], {
         headers: enrichWithAccessToken(),
         baseURL: url
     });

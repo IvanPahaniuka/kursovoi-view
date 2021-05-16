@@ -30,8 +30,8 @@ export function BasketPage(_: IBasketPageProps) {
             };
 
             return {
-                ...baseStuff,
-                cost: baseStuff.cost.toFixed(2),
+                baseStuff,
+                costLine: baseStuff.cost.toFixed(2),
                 count: stuff.count,
                 basketStuff: stuff
             };
@@ -61,16 +61,16 @@ export function BasketPage(_: IBasketPageProps) {
             key: 'name',
             render: (text: string, mappedStuff: any) => {
                 return (
-                    <Link to={`/stuffs?id=${mappedStuff.id}`}>
-                        {mappedStuff.name}
+                    <Link to={`/stuffs?id=${mappedStuff.baseStuff.id}`}>
+                        {mappedStuff.baseStuff.name}
                     </Link>
                 );
             }
         },
         {
             title: 'Цена',
-            dataIndex: 'cost',
-            key: 'cost'
+            dataIndex: 'costLine',
+            key: 'costLine'
         },
         {
             title: 'Количество',
@@ -79,7 +79,7 @@ export function BasketPage(_: IBasketPageProps) {
                 return (
                     <InputNumber size='large' min={0} max={10000}
                                  defaultValue={mappedStuff.count}
-                                 onBlur={onCountInputBlur(mappedStuff.basketStuff.baseStuff)}/>
+                                 onBlur={onCountInputBlur(mappedStuff.baseStuff)}/>
                 );
             }
         },

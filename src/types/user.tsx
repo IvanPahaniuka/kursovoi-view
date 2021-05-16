@@ -11,7 +11,7 @@ export interface IUserWithPassword {
     password: string;
 }
 export interface IUserWithBasket {
-    basket: IBasket;
+    basket?: IBasket;
 }
 export interface IUserWithOrders {
     orders?: Array<IOrder> | undefined;

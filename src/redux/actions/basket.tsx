@@ -7,7 +7,7 @@ import IBasket from "../../types/basket";
 import * as api from "../../services/api";
 
 export const setCountOfStuffInBasket = (user: ILoggedInUser, stuff: IStuff, count: number) => async (dispatch: Dispatch<IBasketUpdateDispatchType>) => {
-    let newBasket: IBasket = {stuffs: [...user.basket.stuffs]};
+    let newBasket: IBasket = {stuffs: [...(user.basket?.stuffs ?? [])]};
     if (count > 0) {
         let index = newBasket.stuffs.findIndex(
             stuffLocal => stuffLocal.stuffId === stuff.id);
@@ -39,5 +39,10 @@ export const clearBasket = (user: ILoggedInUser) => async (dispatch: Dispatch<IB
 export const orderBasket = (user: ILoggedInUser) => async (dispatch: Dispatch<IBasketUpdateDispatchType>) => {
     await api.orderBasket(user);
     let newUser: ILoggedInUser = {...user, orders: undefined, basket: {stuffs: []}};
+    dispatch({type: actionsTypes.BASKET_UPDATE, user: newUser});
+}
+export const getBasket = (user: ILoggedInUser) => async (dispatch: Dispatch<IBasketUpdateDispatchType>) => {
+    let basket: IBasket = await api.getBasket(user);
+    let newUser: ILoggedInUser = {...user, basket: basket};
     dispatch({type: actionsTypes.BASKET_UPDATE, user: newUser});
 }
