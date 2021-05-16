@@ -31,13 +31,28 @@ export function StuffsPanel({
                                 key={i}
                                 hoverable
                                 style={{width: 240}}
-                                cover={<img alt="" src={stuff.image}/>}
+                                cover={
+                                    <div style={{
+                                        position: 'relative',
+                                        width: "100%",
+                                        aspectRatio: "16/9",
+                                        overflow: "hidden"
+                                    }}>
+                                        <img alt="" src={stuff.image}
+                                             style={{
+                                                 position: 'absolute',
+                                                 width: "100%",
+                                                 top: '50%',
+                                                 transform: "translate(0, -50%)"
+                                             }}/>
+                                    </div>
+                                }
                                 onClick={onStuffClickHandler(stuff)}>
                                 <Card.Meta title={`${stuff.cost}р`} description={stuff.name}/>
                             </Card>
                         )}
                 </Space>
-            :
+                :
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}/>
             }
 
