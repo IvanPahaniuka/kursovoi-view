@@ -9,7 +9,7 @@ import IRate from "../types/rate";
 import IOrder from "../types/order";
 import {OrderStates} from "../types/orderStates";
 
-const url = "http://localhost:6001/api";
+const url = "https://localhost:5001/api";
 const ACCOUNT = "accounts";
 const SIGNIN = `${ACCOUNT}/signin`;
 const SIGNUP = `${ACCOUNT}/signup`;

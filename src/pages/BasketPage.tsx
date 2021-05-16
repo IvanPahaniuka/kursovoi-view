@@ -61,8 +61,8 @@ export function BasketPage(_: IBasketPageProps) {
             key: 'name',
             render: (text: string, mappedStuff: any) => {
                 return (
-                    <Link to={`/stuffs?id=${mappedStuff.basketStuff.baseStuff.id}`}>
-                        {mappedStuff.basketStuff.baseStuff.name}
+                    <Link to={`/stuffs?id=${mappedStuff.id}`}>
+                        {mappedStuff.name}
                     </Link>
                 );
             }
