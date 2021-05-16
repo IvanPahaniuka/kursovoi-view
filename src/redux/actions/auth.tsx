@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import * as actionsTypes from '../actionsTypes';
-import {ILoggedInUser, ISigninUser, ISignupUser, IUser} from "../../types/user";
+import {ILoggedInUser, ISigninUser, ISignupUser} from "../../types/user";
 import {
     AuthSigninDispatchTypes,
     AuthSignupDispatchTypes, ISigninResultResetDispatchType,
@@ -8,47 +8,27 @@ import {
     ISignoutDispatchType, ISignupResultResetDispatchType
 } from "../dispatchTypes/auth";
 import * as localStorage from "../../services/localStorage";
-
-let users: Array<IUser> = [];
+import * as api from "../../services/api";
 
 export const signin = (user: ISigninUser) => async (dispatch: Dispatch<AuthSigninDispatchTypes>) => {
-    //todo auth by api
-    let userLocal = users
-        .find(userLocal =>
-            userLocal.email === user.email &&
-            userLocal.password === user.password);
-
-    if (!userLocal) {
-        dispatch({type: actionsTypes.SIGNIN_RESULT_ERROR,
-            error: "Неверно введён адрес электронной почты или пароль"});
-        return;
+    try {
+        let userLogged: ILoggedInUser = await api.signin(user);
+        localStorage.saveUser(userLogged);
+        dispatch({type: actionsTypes.SIGNIN_RESULT_SUCCESS, user: userLogged});
+    }catch (e){
+        dispatch({type: actionsTypes.SIGNIN_RESULT_ERROR, error: e.message});
     }
-
-    let userLogged: ILoggedInUser = {id: userLocal.id, email: userLocal.email,
-        basket: userLocal.basket, orders: userLocal.orders, accessToken: ""};
-    localStorage.saveUser(userLogged);
-    dispatch({type: actionsTypes.SIGNIN_RESULT_SUCCESS, user: userLogged});
 }
 export const signinResultReset = () => async (dispatch: Dispatch<ISigninResultResetDispatchType>) => {
     dispatch({type: actionsTypes.SIGNIN_RESULT_RESET});
 }
 export const signup = (user: ISignupUser) => async (dispatch: Dispatch<AuthSignupDispatchTypes>) => {
-    //todo auth by api
-    let userLocal = users
-        .find(userLocal =>
-            userLocal.email === user.email);
-
-    if (userLocal) {
-        dispatch({type: actionsTypes.SIGNUP_RESULT_ERROR,
-            error: "Пользователь с такой электронной почтой уже зарегистрирован"});
-        return;
+    try {
+        await api.signup(user);
+        dispatch({type: actionsTypes.SIGNUP_RESULT_SUCCESS});
+    }catch (e){
+        dispatch({type: actionsTypes.SIGNUP_RESULT_ERROR, error: e.message});
     }
-
-    let id = Math.max(...users.map(userLocal => userLocal.id), -1) + 1;
-    let newUser: IUser = {id: id, email: user.email, password: user.password, orders: [], basket: {stuffs: []}};
-    users.push(newUser);
-
-    dispatch({type: actionsTypes.SIGNUP_RESULT_SUCCESS});
 }
 export const signupResultReset = () => async (dispatch: Dispatch<ISignupResultResetDispatchType>) => {
     dispatch({type: actionsTypes.SIGNUP_RESULT_RESET});

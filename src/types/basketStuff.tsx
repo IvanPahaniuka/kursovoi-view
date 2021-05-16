@@ -1,6 +1,4 @@
-import IStuff from "./stuff";
-
 export default interface IBasketStuff {
-    baseStuff: IStuff;
+    stuffId: string;
     count: number;
 }

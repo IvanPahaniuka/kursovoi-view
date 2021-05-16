@@ -2,7 +2,7 @@ import ICategory from "./category";
 import IRate from "./rate";
 
 export default interface IStuff {
-    id: number;
+    id: string;
     name: string;
     description: string;
     categories: Array<ICategory>;

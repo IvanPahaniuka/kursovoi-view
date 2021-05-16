@@ -3,7 +3,8 @@ import {ILoggedInUser} from "../types/user";
 const userItem = "user";
 
 export const saveUser = (user: ILoggedInUser) => {
-    localStorage.setItem(userItem, JSON.stringify(user));
+    let userToSave: ILoggedInUser = {...user, orders: undefined};
+    localStorage.setItem(userItem, JSON.stringify(userToSave));
 };
 
 export const parseUser = () => {

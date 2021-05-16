@@ -21,7 +21,7 @@ export const stuffsReducer = (state: IStuffsState = defaultState, action: Stuffs
             return {...state, stuffs: action.stuffs, filteredStuffs: undefined};
 
         case actionsTypes.RATE_STUFF:
-            return {...state};
+            return {...state, stuffs: undefined, filteredStuffs: undefined};
 
         case actionsTypes.FILTER_STUFFS:
             return {...state, filter: action.filter, filteredStuffs: action.filteredStuffs}

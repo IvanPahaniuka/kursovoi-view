@@ -28,7 +28,7 @@ export interface IDefaultLayoutProps {
 export function DefaultLayout({ children }: IDefaultLayoutProps) {
     const dispatch = useDispatch();
     const history = useHistory();
-    const {filter} = useSelector<RootState, IStuffsState>(state => state.stuffs);
+    const {filter, stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const {categories} = useSelector<RootState, ICategoriesState>(state => state.categories);
     const {user, signinResult, signupResult, error: authError} = useSelector<RootState, IUserState>(state => state.auth);
 
@@ -37,7 +37,7 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
         let index = newCategoriesFilter.findIndex(
             categoryFilter => categoryFilter.id === category.id);
 
-        if ((index >= 0) !== value) {
+        if (stuffs && (index >= 0) !== value) {
             if (value) {
                 newCategoriesFilter.push(category);
             }
@@ -46,15 +46,17 @@ export function DefaultLayout({ children }: IDefaultLayoutProps) {
             }
 
             let newFilter: IFilter = {...filter, categories: newCategoriesFilter }
-            dispatch(stuffsActions.filterStuffs(newFilter));
+            dispatch(stuffsActions.filterStuffs(stuffs, newFilter));
             history.push('/');
         }
     };
 
     const onSearchClick = (value: string) => {
-        let newFilter: IFilter = {...filter, search: value }
-        dispatch(stuffsActions.filterStuffs(newFilter));
-        history.push('/');
+        if (stuffs) {
+            let newFilter: IFilter = {...filter, search: value}
+            dispatch(stuffsActions.filterStuffs(stuffs, newFilter));
+            history.push('/');
+        }
     };
 
     const onSignin = (user: ISigninUser) => {

@@ -2,6 +2,7 @@ import * as actionsTypes from "../actionsTypes";
 import {ILoggedInUser} from "../../types/user";
 import {AuthDispatchTypes} from "../dispatchTypes/auth";
 import {BasketDispatchTypes} from "../dispatchTypes/basket";
+import {OrdersDispatchTypes} from "../dispatchTypes/orders";
 
 export interface IUserState {
     user?: ILoggedInUser | null;
@@ -13,7 +14,8 @@ export interface IUserState {
 const defaultState: IUserState = {
 }
 
-export const userReducer = (state: IUserState = defaultState, action: AuthDispatchTypes | BasketDispatchTypes) : IUserState => {
+export const userReducer = (state: IUserState = defaultState,
+                            action: AuthDispatchTypes | BasketDispatchTypes | OrdersDispatchTypes) : IUserState => {
     switch (action.type) {
         case actionsTypes.SIGNIN_RESULT_SUCCESS:
             return {...state, user: action.user, signinResult: "success"};
@@ -37,7 +39,8 @@ export const userReducer = (state: IUserState = defaultState, action: AuthDispat
             return {...state, user: null};
 
         case actionsTypes.BASKET_UPDATE:
-            return {...state, user: action.user}
+        case actionsTypes.ORDERS_GET:
+            return {...state, user: action.user};
 
         default:
             return state;

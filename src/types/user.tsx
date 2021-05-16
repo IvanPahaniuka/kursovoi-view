@@ -2,7 +2,7 @@ import IBasket from "./basket";
 import IOrder from "./order";
 
 export interface IIdentifiedUser {
-    id: number;
+    id: string;
 }
 export interface IUserWithEmail {
     email: string;
@@ -14,7 +14,7 @@ export interface IUserWithBasket {
     basket: IBasket;
 }
 export interface IUserWithOrders {
-    orders: Array<IOrder>;
+    orders?: Array<IOrder> | undefined;
 }
 export interface IUserWithAccessToken {
     accessToken: string;

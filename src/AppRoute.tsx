@@ -11,6 +11,7 @@ import * as stuffsActions from './redux/actions/stuffs';
 import IStuff from "./types/stuff";
 import * as categoriesActions from "./redux/actions/categories";
 import * as authActions from "./redux/actions/auth";
+import * as ordersActions from "./redux/actions/orders";
 import {ICategoriesState} from "./redux/reducers/categories";
 import {IUserState} from "./redux/reducers/user";
 import {BasketPage} from "./pages/BasketPage";
@@ -27,13 +28,14 @@ export function AppRoute() {
         if (!stuffs) dispatch(stuffsActions.getStuffs());
     }, [stuffs, dispatch]);
     useEffect(() => {
-        if (!filteredStuffs) dispatch(stuffsActions.filterStuffs(filter));
-    }, [filteredStuffs, filter, dispatch]);
+        if (stuffs && !filteredStuffs) dispatch(stuffsActions.filterStuffs(stuffs, filter));
+    }, [stuffs, filteredStuffs, filter, dispatch]);
     useEffect(() => {
         if (!categories) dispatch(categoriesActions.getCategories());
     }, [categories, dispatch]);
     useEffect(() => {
         if (user === undefined) dispatch(authActions.loadFromStorage());
+        if (user && user.orders === undefined) dispatch(ordersActions.getOrders(user));
     }, [user, dispatch]);
     useEffect(() => {
         if (signinResult || authError) dispatch(authActions.signinResultReset());
@@ -43,9 +45,9 @@ export function AppRoute() {
     }, [signupResult, authError, dispatch]);
 
     const getStuffFromLocation = (): IStuff => {
-        const id = +(qs.parse(location.search, { ignoreQueryPrefix: true }).id ?? -1);
+        const id: string = qs.parse(location.search, { ignoreQueryPrefix: true })?.id?.toString() ?? "0";
         const stuff: IStuff = stuffs?.find(stuff => stuff.id === id) ??
-            { id: -1, rates: [], name: 'Неизвестный товар', description: '', cost: 0, image: '', categories: [] };
+            { id: "0", rates: [], name: 'Неизвестный товар', description: '', cost: 0, image: '', categories: [] };
         return stuff;
     }
 

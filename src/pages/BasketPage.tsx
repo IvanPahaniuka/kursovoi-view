@@ -7,6 +7,7 @@ import {IUserState} from "../redux/reducers/user";
 import IBasket from "../types/basket";
 import * as basketActions from "../redux/actions/basket";
 import IStuff from "../types/stuff";
+import {IStuffsState} from "../redux/reducers/stuffs";
 
 export interface IBasketPageProps {
 }
@@ -14,10 +15,27 @@ export interface IBasketPageProps {
 export function BasketPage(_: IBasketPageProps) {
     const dispatch = useDispatch();
     const {user} = useSelector<RootState, IUserState>(state => state.auth);
+    const {stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const basket: IBasket = user?.basket ?? {stuffs: []};
     const mappedBasketStuffs = basket.stuffs.map(
-        stuff => ({...stuff.baseStuff, cost: stuff.baseStuff.cost.toFixed(2),
-            count: stuff.count, basketStuff: stuff}));
+        stuff => {
+            let baseStuff: IStuff = stuffs?.find(s => s.id === stuff.stuffId) ?? {
+                id: "0",
+                cost: 0,
+                name: "Неизвестный товар",
+                rates: [],
+                description: "",
+                image: "",
+                categories: []
+            };
+
+            return {
+                ...baseStuff,
+                cost: baseStuff.cost.toFixed(2),
+                count: stuff.count,
+                basketStuff: stuff
+            };
+        });
 
     const onCountInputBlur = (stuff: IStuff) => (e: any) => {
         let value = +e.target.value;

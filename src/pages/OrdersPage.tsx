@@ -4,16 +4,18 @@ import {useSelector} from "react-redux";
 import {RootState} from "../redux/reducers/root";
 import {IUserState} from "../redux/reducers/user";
 import {OrderStates} from "../types/orderStates";
+import {IStuffsState} from "../redux/reducers/stuffs";
 
 export interface IOrdersPageProps {
 }
 
 export function OrdersPage(_: IOrdersPageProps) {
     const {user} = useSelector<RootState, IUserState>(state => state.auth);
+    const {stuffs} = useSelector<RootState, IStuffsState>(state => state.stuffs);
     const orders = user?.orders
-        .map(order => ({...order,
+        ?.map(order => ({...order,
             cost: order.basket.stuffs
-                .map(s => s.count * s.baseStuff.cost)
+                .map(s => s.count * (stuffs?.find(s2 => s2.id === s.stuffId)?.cost ?? 0))
                 .reduce((ps, s) => ps + s)
                 .toFixed(2)}))
         .reverse() ?? [];
